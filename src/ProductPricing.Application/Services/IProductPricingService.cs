@@ -1,6 +1,9 @@
+using ProductPricing.Application.Contracts.Responses;
+using ProductPricing.Application.Models.Domain;
+
 namespace ProductPricing.Application.Services;
 
 public interface IProductPricingService
 {
-    bool CheckProductExists(int id);
+    Task<ProductPricingResponse> GetProductPricingByIdAsync(int id);
 }

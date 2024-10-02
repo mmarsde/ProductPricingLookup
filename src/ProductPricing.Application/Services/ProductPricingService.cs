@@ -1,43 +1,35 @@
-using ProductPricing.Application.Models.Domain;
+using ProductPricing.Application.Contracts.Responses;
+using ProductPricing.Application.Repositories;
 
 namespace ProductPricing.Application.Services;
 
 public class ProductPricingService : IProductPricingService
 {
-    private readonly IEnumerable<ProductPricingModel> _productPrices =
-    [
-        new()
-        {
-            Id = 1,
-            Name = "Product A",
-            CurrentPrice = 100.0M,
-            LastUpdated = DateTime.UtcNow,
-        },
-        new()
-        {
-            Id = 2,
-            Name = "Product B",
-            CurrentPrice = 110.0M,
-            LastUpdated = DateTime.UtcNow,
-        },
-        new()
-        {
-            Id = 3,
-            Name = "Product C",
-            CurrentPrice = 120.0M,
-            LastUpdated = DateTime.UtcNow,
-        },
-        new()
-        {
-            Id = 5,
-            Name = "Product E",
-            CurrentPrice = 130.0M,
-            LastUpdated = DateTime.UtcNow,
-        }
-    ];
+    private readonly IProductPricingRepository _productPricingRepository;
     
-    public bool CheckProductExists(int id)
+    public ProductPricingService(IProductPricingRepository productPricingRepository)
     {
-        return _productPrices.Any(p => p.Id == id);
+        _productPricingRepository = productPricingRepository;
     }
+    
+    public async Task<ProductPricingResponse> GetProductPricingByIdAsync(int id)
+    {
+        var productPricingModel = await _productPricingRepository.GetProductPricingByIdAsync(id);
+
+        if (productPricingModel == null)
+        {
+            return null;
+        }
+
+        return new ProductPricingResponse
+        {
+            Id = productPricingModel.Id,
+            Name = productPricingModel.Name,
+            LastUpdatedDateTime = productPricingModel.LastUpdated,
+            CurrentPrice = productPricingModel.CurrentPrice,
+            PriceHistory = productPricingModel.PriceHistory.Select(ph => new PriceResponse
+                { Price = ph.Price, CreateDateTime = ph.CreateDateTime }).ToList() 
+        };
+    }
+    
 }
