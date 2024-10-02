@@ -19,11 +19,41 @@ public class ProductPricingServiceTests
         _productPricingService = new ProductPricingService(_productPricingRepository);
     }
 
-    [Theory]
-    [InlineData(1)]
-    public async Task GetProductPricingByIdAsync_ShouldReturnNull_WhenNoProductPricesFound(int productId)
+    [Fact]
+    public void GetAllProductsAsync_ReturnsNothingIfNoProducts()
     {
         //arrange
+        var expectedResponse = new ProductsResponse
+        {
+            Products = Enumerable.Empty<ProductResponse>()
+        };
+        
+        //act
+        var result = _productPricingService.GetAllProductsAsync();
+
+        //assert
+        result.Result.Should().BeEquivalentTo(expectedResponse);
+    }
+
+    [Theory]
+    [ClassData(typeof(ProductsTestDataGenerator))]
+    public async Task GetAllProductsAsync_ReturnsExpectedResult(IEnumerable<ProductPricingModel> expectedProducts, ProductsResponse expectedResponse)
+    {
+        //arrange
+        _productPricingRepository.GetAllProductsAsync().Returns(expectedProducts);
+        
+        //act
+        var response = await _productPricingService.GetAllProductsAsync();
+        
+        //assert
+        response.Should().BeEquivalentTo(expectedResponse);
+    }
+
+    [Fact]
+    public async Task GetProductPricingByIdAsync_ShouldReturnNull_WhenNoProductPricesFound()
+    {
+        //arrange
+        var productId = 1;
         
         //act
         var result = await _productPricingService.GetProductPricingByIdAsync(productId);
@@ -31,7 +61,6 @@ public class ProductPricingServiceTests
         //assert
         result.Should().BeNull();
     }
-    
     
     [Theory]
     [ClassData(typeof(ProductPricingTestDataGenerator))]

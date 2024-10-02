@@ -4,22 +4,18 @@ namespace ProductPricing.Application.Repositories;
 
 public class ProductPricingRepository : IProductPricingRepository
 {
-    private readonly IEnumerable<ProductPricingModel> _productPricingModels;
-    
-    public ProductPricingRepository(IEnumerable<ProductPricingModel> productPricingModels)
-    {
-        _productPricingModels = productPricingModels;
-    }
+    private readonly IEnumerable<ProductPricingModel> _productPricingModels = SeedProductPricingModels();
 
-    public ProductPricingRepository() : this(SeedProductPricingModels())
-    {
-    }
-    
     public Task<ProductPricingModel> GetProductPricingByIdAsync(int id)
     {
-        return Task.FromResult(_productPricingModels.FirstOrDefault(p => p.Id == id))!;
+        return Task.FromResult(_productPricingModels.FirstOrDefault(x => x.Id == id));
     }
 
+    public Task<IEnumerable<ProductPricingModel>> GetAllProductsAsync()
+    {
+        return Task.FromResult(_productPricingModels);
+    }
+    
     private static IEnumerable<ProductPricingModel> SeedProductPricingModels() => 
         [
             new()

@@ -5,5 +5,6 @@ namespace ProductPricing.Application.Services;
 
 public interface IProductPricingService
 {
+    Task<ProductsResponse> GetAllProductsAsync();
     Task<ProductPricingResponse> GetProductPricingByIdAsync(int id);
 }

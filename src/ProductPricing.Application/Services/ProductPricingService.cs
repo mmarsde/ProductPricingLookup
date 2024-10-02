@@ -11,7 +11,24 @@ public class ProductPricingService : IProductPricingService
     {
         _productPricingRepository = productPricingRepository;
     }
-    
+
+    public async Task<ProductsResponse> GetAllProductsAsync()
+    {
+        var productPricingModels = await _productPricingRepository.GetAllProductsAsync();
+        
+        if (productPricingModels == null)
+            return new ProductsResponse
+            {
+                Products = Enumerable.Empty<ProductResponse>()
+            };
+
+        return new ProductsResponse
+        {
+            Products = productPricingModels.Select(x => new ProductResponse
+                { Id = x.Id, Name = x.Name, CurrentPrice = x.CurrentPrice, LastUpdatedDateTime = x.LastUpdated })
+        };
+    }
+
     public async Task<ProductPricingResponse> GetProductPricingByIdAsync(int id)
     {
         var productPricingModel = await _productPricingRepository.GetProductPricingByIdAsync(id);
@@ -31,5 +48,4 @@ public class ProductPricingService : IProductPricingService
                 { Price = ph.Price, CreateDateTime = ph.CreateDateTime }).ToList() 
         };
     }
-    
 }
