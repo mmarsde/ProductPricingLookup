@@ -7,6 +7,8 @@ public class ProductPricingServiceTests
     [Theory]
     [InlineData(1, true)]
     [InlineData(2, false)]
+    [InlineData(3, true)]
+    [InlineData(4, false)]
     public void CheckProductExists_ShouldReturnExpectedResult(int id, bool expectedResult)
     {
         //act
