@@ -4,13 +4,11 @@ public class ProductPricingServiceTests
 {
     private readonly ProductPricingService _sut = new();
         
-    [Fact]
-    public void CheckProductExists_ShouldReturnTrue()
+    [Theory]
+    [InlineData(1, true)]
+    [InlineData(2, false)]
+    public void CheckProductExists_ShouldReturnExpectedResult(int id, bool expectedResult)
     {
-        //arrange
-        var id = 1;
-        var expectedResult = true;
-        
         //act
         var result = _sut.CheckProductExists(id);
         
@@ -23,7 +21,7 @@ internal class ProductPricingService : IProductPricingService
 {
     public bool CheckProductExists(int id)
     {
-        return true;
+        return id == 1;
     }
 }
 
