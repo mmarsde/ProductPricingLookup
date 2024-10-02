@@ -1,8 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BFDF3840-770F-4E15-8BDA-EEC6EDB47B15}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{914B2599-72F0-469C-A650-343D408BDCA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductPricing.Application", "src\ProductPricing.Application\ProductPricing.Application.csproj", "{6167852B-9F9D-4B66-9061-05BF5BB50751}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6167852B-9F9D-4B66-9061-05BF5BB50751} = {BFDF3840-770F-4E15-8BDA-EEC6EDB47B15}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6167852B-9F9D-4B66-9061-05BF5BB50751}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6167852B-9F9D-4B66-9061-05BF5BB50751}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6167852B-9F9D-4B66-9061-05BF5BB50751}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6167852B-9F9D-4B66-9061-05BF5BB50751}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
