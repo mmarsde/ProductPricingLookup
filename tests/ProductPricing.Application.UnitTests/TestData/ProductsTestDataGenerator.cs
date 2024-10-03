@@ -4,7 +4,7 @@ using ProductPricing.Application.Models.Domain;
 
 namespace ProductPricing.Application.UnitTests.TestData;
 
-public class ProductsTestDataGenerator : IEnumerable<object[]>
+internal sealed class ProductsTestDataGenerator : IEnumerable<object[]>
 {
     public IEnumerator<object[]> GetEnumerator()
     {
@@ -12,38 +12,41 @@ public class ProductsTestDataGenerator : IEnumerable<object[]>
         [
             new List<ProductPricingModel>()
             {
-                new ProductPricingModel
+                new()
                 {
                     Id = 1,
                     Name = "Product A",
                     CurrentPrice = 100.0M,
                     LastUpdated = new DateTime(2024, 09, 26, 12, 34, 56),
-                    PriceHistory = new List<PriceModel>
-                    {
+                    PriceHistory =
+                    [
                         new PriceModel
                         {
                             Price = 120.0M,
                             CreateDateTime = new DateTime(2024, 09, 01, 00, 00, 00),
                         },
+
                         new PriceModel
                         {
                             Price = 110.0M,
                             CreateDateTime = new DateTime(2024, 08, 15, 00, 00, 00),
                         },
+
                         new PriceModel
                         {
                             Price = 100.0M,
                             CreateDateTime = new DateTime(2024, 08, 10, 00, 00, 00),
-                        },                     
-                    }
+                        }
+
+                    ]
                 },
-                new ProductPricingModel
+                new()
                 {
                     Id = 2,
                     Name = "Product B",
                     CurrentPrice = 200.0M,
                     LastUpdated = new DateTime(2024, 09, 25, 10, 12, 34),
-                    PriceHistory = Enumerable.Empty<PriceModel>().ToList(),
+                    PriceHistory = Enumerable.Empty<PriceModel>(),
                 },
             },
             new ProductsResponse
@@ -68,6 +71,6 @@ public class ProductsTestDataGenerator : IEnumerable<object[]>
             }
         ];
     }
-
+    
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

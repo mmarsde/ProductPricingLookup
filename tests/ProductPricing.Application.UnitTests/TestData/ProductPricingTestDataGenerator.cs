@@ -4,7 +4,7 @@ using ProductPricing.Application.Models.Domain;
 
 namespace ProductPricing.Application.UnitTests.TestData;
 
-public class ProductPricingTestDataGenerator : IEnumerable<object[]>
+internal sealed class ProductPricingTestDataGenerator : IEnumerable<object[]>
 {
     public IEnumerator<object[]> GetEnumerator()
     {

@@ -1,5 +1,6 @@
 using FluentAssertions;
 using NSubstitute;
+using ProductPricing.Application.Contracts.Requests;
 using ProductPricing.Application.Contracts.Responses;
 using ProductPricing.Application.Models.Domain;
 using ProductPricing.Application.Services;
@@ -20,45 +21,46 @@ public class ProductPricingServiceTests
     }
 
     [Fact]
-    public void GetAllProductsAsync_ReturnsNothingIfNoProducts()
+    public async Task GetAllProductsAsync_ShouldReturnNothing_WhenNoProductsFound()
     {
         //arrange
-        var expectedResponse = new ProductsResponse
+        var expectedResult = new ProductsResponse
         {
             Products = Enumerable.Empty<ProductResponse>()
         };
         
         //act
-        var result = _productPricingService.GetAllProductsAsync();
-
+        var result = await _productPricingService.GetAllProductsAsync();
+        
         //assert
-        result.Result.Should().BeEquivalentTo(expectedResponse);
+        await _productPricingRepository.Received(1).GetAllProductsAsync();
+        result.Should().BeEquivalentTo(expectedResult);
     }
 
     [Theory]
     [ClassData(typeof(ProductsTestDataGenerator))]
-    public async Task GetAllProductsAsync_ReturnsExpectedResult(IEnumerable<ProductPricingModel> expectedProducts, ProductsResponse expectedResponse)
+    public async Task GetAllProductsAsync_ShouldReturnExpectedResult(IEnumerable<ProductPricingModel> expectedProducts, ProductsResponse expectedResult)
     {
         //arrange
         _productPricingRepository.GetAllProductsAsync().Returns(expectedProducts);
         
         //act
-        var response = await _productPricingService.GetAllProductsAsync();
+        var result = await _productPricingService.GetAllProductsAsync();
         
         //assert
-        response.Should().BeEquivalentTo(expectedResponse);
+        await _productPricingRepository.Received(1).GetAllProductsAsync();
+        result.Should().BeEquivalentTo(expectedResult);
     }
 
-    [Fact]
-    public async Task GetProductPricingByIdAsync_ShouldReturnNull_WhenNoProductPricesFound()
+    [Theory]
+    [InlineData(1)]
+    public async Task GetProductPricingByIdAsync_ShouldReturnNull_WhenNoProductPricesFound(int productId)
     {
-        //arrange
-        var productId = 1;
-        
         //act
         var result = await _productPricingService.GetProductPricingByIdAsync(productId);
-        
+
         //assert
+        await _productPricingRepository.Received(1).GetProductPricingByIdAsync(Arg.Is(productId));
         result.Should().BeNull();
     }
     
@@ -73,9 +75,46 @@ public class ProductPricingServiceTests
         var result = await _productPricingService.GetProductPricingByIdAsync(productId);
         
         //assert
+        await _productPricingRepository.Received(1).GetProductPricingByIdAsync(Arg.Is(productId)); 
         result.Should().BeEquivalentTo(expectedResult);
     }
+
+    [Theory]
+    [ClassData(typeof(DiscountTestDataGenerator))]
+    public async Task ApplyDiscountAsync_ShouldReturnExpectedResult(int productId, ProductPricingModel repositoryResult, DiscountRequest request, decimal expectedResult)
+    {
+        //arrange 
+        _productPricingRepository.GetProductPricingByIdAsync(productId).Returns(repositoryResult);
+        
+        //act
+        var result = await _productPricingService.ApplyDiscountAsync(productId, request);
+        
+        //assert
+        await _productPricingRepository.Received(1).GetProductPricingByIdAsync(Arg.Is(productId)); 
+        result.DiscountedPrice.Should().Be(expectedResult);
+    }
+
+    [Theory]
+    [ClassData(typeof(DiscountRequestsTestDataGenerator))]
+    public async Task ApplyDiscountAsync_ShouldReturnNull_WhenProductDoesNotExist(int productId, DiscountRequest request)
+    {
+        //act 
+        var result = await _productPricingService.ApplyDiscountAsync(productId, request);
+        
+        //assert
+        await _productPricingRepository.Received(1).GetProductPricingByIdAsync(Arg.Is(productId));
+        result.Should().BeNull();
+    }
+
+    [Theory]
+    [ClassData(typeof(InvalidDiscountRequestsTestDataGenerator))]
+    public async Task ApplyDiscountAsync_ThrowsArgumentException_WhenDiscountIsInvalid(int productId,
+        DiscountRequest request)
+    {
+        //act
+        var act = async () => await _productPricingService.ApplyDiscountAsync(productId, request);
+        
+        //assert
+        await act.Should().ThrowAsync<ArgumentException>().WithMessage($"Discount percentage must be between 1 and 100. (Parameter '{nameof(request)}')");
+    }
 }
-
-
-
