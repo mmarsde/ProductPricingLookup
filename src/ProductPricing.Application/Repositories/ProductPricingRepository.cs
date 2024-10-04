@@ -15,7 +15,12 @@ public class ProductPricingRepository : IProductPricingRepository
     {
         return Task.FromResult(_productPricingModels);
     }
-    
+
+    public Task<IEnumerable<ProductPricingModel>> UpdateProductPriceAsync(int productId, PriceModel originalPrice, PriceModel newPrice)
+    {
+        throw new NotImplementedException();
+    }
+
     private static IEnumerable<ProductPricingModel> SeedProductPricingModels() => 
         [
             new()
