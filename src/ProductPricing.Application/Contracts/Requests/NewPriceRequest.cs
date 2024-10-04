@@ -1,8 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace ProductPricing.Application.Contracts.Requests;
 
 public class NewPriceRequest
 {
-    public int Id { get; init; }
-    public decimal NewPrice { get; init; }
-    public DateTime LastUpdated { get; init; }
+    [RegularExpression(@"^\d+(\.\d{1,2})?$")]
+    [Range(0, 9999999999999999.99, ErrorMessage = "The price must be a positive number.")]
+    public required decimal NewPrice { get; set; }
 }

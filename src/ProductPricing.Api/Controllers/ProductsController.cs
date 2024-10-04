@@ -2,6 +2,7 @@ using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using ProductPricing.Application.Contracts.Requests;
 using ProductPricing.Application.Contracts.Responses;
+using ProductPricing.Application.Mappers.Extensions;
 using ProductPricing.Application.Services;
 
 namespace ProductPricing.Api.Controllers;
@@ -43,12 +44,17 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost("products/{id:int}/discounts")]
-    [ProducesResponseType(typeof(DiscountResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(DiscountResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> Apply([FromRoute] int id, [FromBody]DiscountRequest request)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
         var response = await _productPricingService.ApplyDiscountAsync(id, request);
 
         if (response is null)
@@ -56,16 +62,24 @@ public class ProductsController : ControllerBase
             return NotFound();
         }
         
-        return CreatedAtAction(nameof(GetProductById), new { id, request }, response);
+        return Ok(response);
     }
     
     [HttpPut("products/{id:int}/prices")]
     [ProducesResponseType(typeof(NewPriceResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces(MediaTypeNames.Application.Json)]    
-    public  IActionResult Update([FromRoute] int id, [FromBody]NewPriceRequest request)
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody]NewPriceRequest request)
     {
-        //TODO: Implement action method for updating a price resource
-        return CreatedAtAction(nameof(GetProductById), new { id, request }, request);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var priceModel = request.ToPriceModel();
+        var response = await _productPricingService.UpdatePriceAsync(priceModel); 
+        
+        return CreatedAtAction(nameof(GetProductById), new { id = id }, response);
     }
 }

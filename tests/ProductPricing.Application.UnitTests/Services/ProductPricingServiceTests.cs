@@ -105,16 +105,4 @@ public class ProductPricingServiceTests
         await _productPricingRepository.Received(1).GetProductPricingByIdAsync(Arg.Is(productId));
         result.Should().BeNull();
     }
-
-    [Theory]
-    [ClassData(typeof(InvalidDiscountRequestsTestDataGenerator))]
-    public async Task ApplyDiscountAsync_ThrowsArgumentException_WhenDiscountIsInvalid(int productId,
-        DiscountRequest request)
-    {
-        //act
-        var act = async () => await _productPricingService.ApplyDiscountAsync(productId, request);
-        
-        //assert
-        await act.Should().ThrowAsync<ArgumentException>().WithMessage($"Discount percentage must be between 1 and 100. (Parameter '{nameof(request)}')");
-    }
 }

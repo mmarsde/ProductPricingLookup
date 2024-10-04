@@ -1,6 +1,8 @@
 namespace ProductPricing.Application.Contracts.Responses;
 
-public class NewPriceResponse : ProductResponse
+public class NewPriceResponse
 {
+    public int Id { get; init; }
     public decimal NewPrice { get; init; }
+    public DateTime LastUpdated { get; init; }
 }
