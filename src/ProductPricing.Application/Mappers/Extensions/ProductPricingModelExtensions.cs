@@ -13,7 +13,7 @@ public static class ProductPricingModelExtensions
             Name = productPricingModel.Name,
             LastUpdatedDateTime = productPricingModel.LastUpdated,
             CurrentPrice = productPricingModel.CurrentPrice,
-            PriceHistory = productPricingModel.PriceHistory.Select(MapToPriceResponse).ToList() 
+            PriceHistory = productPricingModel.PriceHistory.Select(MapToPriceResponse)
         };
     }
     
@@ -21,11 +21,11 @@ public static class ProductPricingModelExtensions
     {
         return new ProductsResponse
         {
-            Products = productPricingModels.Select(MapToPriceResponse)
+            Products = productPricingModels.Select(MapToProductResponse)
         };
     }
 
-    private static ProductResponse MapToPriceResponse(this ProductPricingModel productPricingModel)
+    private static ProductResponse MapToProductResponse(this ProductPricingModel productPricingModel)
     {
         return new ProductResponse
         {
