@@ -1,3 +1,4 @@
+using Microsoft.VisualBasic.CompilerServices;
 using ProductPricing.Application.Contracts.Responses;
 using ProductPricing.Application.Models.Domain;
 
@@ -11,8 +12,6 @@ public static class ProductPricingModelExtensions
         {
             Id = productPricingModel.Id,
             Name = productPricingModel.Name,
-            LastUpdatedDateTime = productPricingModel.LastUpdated,
-            CurrentPrice = productPricingModel.CurrentPrice,
             PriceHistory = productPricingModel.PriceHistory.Select(MapToPriceResponse)
         };
     }
@@ -25,6 +24,28 @@ public static class ProductPricingModelExtensions
         };
     }
 
+    public static DiscountResponse MapToDiscountResponse(this ProductPricingModel productPricingModel, decimal discountPrice)
+    {
+        return new DiscountResponse
+        {
+            Id = productPricingModel.Id,
+            Name = productPricingModel.Name,
+            OriginalPrice = productPricingModel.CurrentPrice,
+            DiscountedPrice = discountPrice
+        };
+    }
+
+    public static NewPriceResponse MapToNewPriceResponse(this ProductPricingModel productPricingModel)
+    {
+        return new NewPriceResponse
+        {
+            Id = productPricingModel.Id,
+            Name = productPricingModel.Name,
+            LastUpdated = productPricingModel.LastUpdated,
+            NewPrice = productPricingModel.CurrentPrice
+        };
+    }
+    
     private static ProductResponse MapToProductResponse(this ProductPricingModel productPricingModel)
     {
         return new ProductResponse

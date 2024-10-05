@@ -81,7 +81,7 @@ public class ProductPricingServiceTests
 
     [Theory]
     [ClassData(typeof(DiscountTestDataGenerator))]
-    public async Task ApplyDiscountAsync_ShouldReturnExpectedResult(int productId, ProductPricingModel repositoryResult, DiscountRequest request, decimal expectedResult)
+    public async Task ApplyDiscountAsync_ShouldReturnExpectedResult(int productId, ProductPricingModel repositoryResult, DiscountRequest request, decimal expectedDiscountPrice, decimal expectedOriginalPrice, string expectedProductName)
     {
         //arrange 
         _productPricingRepository.GetProductPricingByIdAsync(productId).Returns(repositoryResult);
@@ -90,8 +90,12 @@ public class ProductPricingServiceTests
         var result = await _productPricingService.ApplyDiscountAsync(productId, request);
         
         //assert
-        await _productPricingRepository.Received(1).GetProductPricingByIdAsync(Arg.Is(productId)); 
-        result.DiscountedPrice.Should().Be(expectedResult);
+        await _productPricingRepository.Received(1).GetProductPricingByIdAsync(Arg.Is(productId));
+        result.Should().BeOfType<DiscountResponse>();
+        result.OriginalPrice.Should().Be(expectedOriginalPrice);
+        result.DiscountedPrice.Should().Be(expectedDiscountPrice);
+        result.Name.Should().Be(expectedProductName);
+        result.Id.Should().Be(productId);
     }
 
     [Theory]
@@ -100,6 +104,35 @@ public class ProductPricingServiceTests
     {
         //act 
         var result = await _productPricingService.ApplyDiscountAsync(productId, request);
+        
+        //assert
+        await _productPricingRepository.Received(1).GetProductPricingByIdAsync(Arg.Is(productId));
+        result.Should().BeNull();
+    }
+    
+    [Theory]
+    [ClassData(typeof(NewPriceTestDataGenerator))]
+    public async Task UpdatePriceAsync_ShouldReturnExpectedResult(int productId, PriceModel priceModel, ProductPricingModel repositoryResult, NewPriceResponse expectedResult)
+    {
+        //arrange
+        _productPricingRepository.GetProductPricingByIdAsync(productId).Returns(repositoryResult);
+        await _productPricingRepository.UpdateProductPriceAsync(Arg.Is(productId), Arg.Any<ProductPricingModel>());
+        
+        //act
+        var result = await _productPricingService.UpdatePriceAsync(productId, priceModel);
+        
+        //assert
+        await _productPricingRepository.Received(1).GetProductPricingByIdAsync(Arg.Is(productId));
+        await _productPricingRepository.Received(1).UpdateProductPriceAsync(Arg.Is(productId), Arg.Any<ProductPricingModel>());
+        result.Should().BeEquivalentTo(expectedResult);
+    }
+
+    [Theory]
+    [ClassData(typeof(PriceModelTestDataGenerator))]
+    public async Task UpdatePriceAsync_ShouldReturnNull_WhenProductDoesNotExist(int productId, PriceModel priceModel)
+    {
+        //act 
+        var result = await _productPricingService.UpdatePriceAsync(productId, priceModel);
         
         //assert
         await _productPricingRepository.Received(1).GetProductPricingByIdAsync(Arg.Is(productId));

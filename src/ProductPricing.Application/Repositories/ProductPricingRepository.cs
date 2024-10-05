@@ -4,7 +4,7 @@ namespace ProductPricing.Application.Repositories;
 
 public class ProductPricingRepository : IProductPricingRepository
 {
-    private readonly IEnumerable<ProductPricingModel> _productPricingModels = SeedProductPricingModels();
+    private readonly List<ProductPricingModel> _productPricingModels = SeedProductPricingModels();
 
     public Task<ProductPricingModel> GetProductPricingByIdAsync(int id)
     {
@@ -13,15 +13,18 @@ public class ProductPricingRepository : IProductPricingRepository
 
     public Task<IEnumerable<ProductPricingModel>> GetAllProductsAsync()
     {
-        return Task.FromResult(_productPricingModels);
+        return Task.FromResult(_productPricingModels.AsEnumerable());
     }
 
-    public Task<IEnumerable<ProductPricingModel>> UpdateProductPriceAsync(int productId, PriceModel originalPrice, PriceModel newPrice)
+    public Task UpdateProductPriceAsync(int productId, ProductPricingModel productPricingModel)
     {
-        throw new NotImplementedException();
+        var productPriceIndex = _productPricingModels.FindIndex(x => x.Id == productId);
+        _productPricingModels[productPriceIndex] = productPricingModel;
+        return Task.CompletedTask;
     }
+    
 
-    private static IEnumerable<ProductPricingModel> SeedProductPricingModels() => 
+    private static List<ProductPricingModel> SeedProductPricingModels() => 
         [
             new()
             {

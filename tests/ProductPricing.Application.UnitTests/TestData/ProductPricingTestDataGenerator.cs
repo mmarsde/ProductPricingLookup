@@ -40,8 +40,6 @@ internal sealed class ProductPricingTestDataGenerator : IEnumerable<object[]>
             {
                 Id = 1,
                 Name = "Product A",
-                CurrentPrice = 100.0M,
-                LastUpdatedDateTime = new DateTime(2024, 09, 26, 12, 34, 56),
                 PriceHistory = new List<PriceResponse>
                 {
                     new()
@@ -77,8 +75,6 @@ internal sealed class ProductPricingTestDataGenerator : IEnumerable<object[]>
             {
                 Id = 2,
                 Name = "Product B",
-                CurrentPrice = 200.0M,
-                LastUpdatedDateTime = new DateTime(2024, 09, 25, 10, 12, 34),
                 PriceHistory = Enumerable.Empty<PriceResponse>().ToList(),
             }
         ];

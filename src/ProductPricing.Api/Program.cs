@@ -9,7 +9,6 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-
         builder.Services.AddControllers();
         builder.Services.AddProductPricingApplication();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -17,7 +16,6 @@ public class Program
         builder.Services.AddSwaggerGen();
         builder.Services.AddProblemDetails();
         
-
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.

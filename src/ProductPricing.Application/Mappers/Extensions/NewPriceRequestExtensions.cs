@@ -5,7 +5,7 @@ namespace ProductPricing.Application.Mappers.Extensions;
 
 public static class NewPriceRequestExtensions
 {
-    public static PriceModel ToPriceModel(this NewPriceRequest request) => 
+    public static PriceModel MapToPriceModel(this NewPriceRequest request) => 
         new()
         {
             CreateDateTime = DateTime.UtcNow,

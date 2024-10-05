@@ -77,9 +77,14 @@ public class ProductsController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var priceModel = request.ToPriceModel();
-        var response = await _productPricingService.UpdatePriceAsync(priceModel); 
+        var priceModel = request.MapToPriceModel();
         
-        return CreatedAtAction(nameof(GetProductById), new { id = id }, response);
+        var response = await _productPricingService.UpdatePriceAsync(id, priceModel);
+        if (response is null)
+        {
+            return NotFound();
+        }
+        
+        return CreatedAtAction(nameof(GetProductById), new { id }, response);
     }
 }

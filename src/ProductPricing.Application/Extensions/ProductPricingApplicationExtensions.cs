@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using ProductPricing.Application.Repositories;
 using ProductPricing.Application.Services;
 

@@ -28,8 +28,4 @@
       <ProjectReference Include="..\..\src\ProductPricing.Application\ProductPricing.Application.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Repositories\" />
-    </ItemGroup>
-
 </Project>

@@ -34,27 +34,50 @@ public class ProductPricingService : IProductPricingService
     {
         var productPricingModel = await _productPricingRepository.GetProductPricingByIdAsync(id);
 
-        if (productPricingModel == null)
+        if (productPricingModel is null)
         {
             return null;
         }
         
         var discountPrice = CalculateDiscountPrice(request.DiscountPercentage, productPricingModel.CurrentPrice);
-
-        return new DiscountResponse
-        {
-            Id = productPricingModel.Id,
-            Name = productPricingModel.Name,
-            OriginalPrice = productPricingModel.CurrentPrice,
-            DiscountedPrice = discountPrice
-        };
+        
+        return productPricingModel.MapToDiscountResponse(discountPrice);
     }
-
-    public Task<NewPriceResponse> UpdatePriceAsync(PriceModel priceModel)
+    
+    public async Task<NewPriceResponse> UpdatePriceAsync(int id, PriceModel priceModel)
     {
-        throw new NotImplementedException();
+        var productPricingModel = await _productPricingRepository.GetProductPricingByIdAsync(id);
+
+        if (productPricingModel is null)
+        {
+            return null;
+        }
+
+        var priceHistory = UpdatePriceHistory(productPricingModel);
+        var productPriceModel = UpdateProductPriceModel(priceModel, productPricingModel, priceHistory);
+        await _productPricingRepository.UpdateProductPriceAsync(id, productPriceModel);
+        
+        return productPriceModel.MapToNewPriceResponse();
     }
 
+    private static ProductPricingModel UpdateProductPriceModel(PriceModel priceModel, ProductPricingModel productPricingModel,
+        IEnumerable<PriceModel> priceHistory)
+    {
+        productPricingModel.CurrentPrice = priceModel.Price;
+        productPricingModel.LastUpdated = priceModel.CreateDateTime;
+        productPricingModel.PriceHistory = priceHistory;
+        return productPricingModel;
+    }
+
+    private static IEnumerable<PriceModel> UpdatePriceHistory(ProductPricingModel productPricingModel)
+    {
+        var priceHistory = productPricingModel.PriceHistory?.ToList() ?? [];
+        var originalPrice = productPricingModel.CurrentPrice;
+        var lastUpdated = productPricingModel.LastUpdated;
+        priceHistory.Add(new PriceModel{ CreateDateTime = lastUpdated, Price = originalPrice });
+        return priceHistory.OrderByDescending(x => x.CreateDateTime); 
+    }
+    
     private static decimal CalculateDiscountPrice(int discountPercentage, decimal currentPrice)
     {
         var discountValue = discountPercentage / 100m;

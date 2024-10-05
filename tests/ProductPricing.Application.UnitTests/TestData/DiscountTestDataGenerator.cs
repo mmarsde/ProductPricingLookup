@@ -23,7 +23,9 @@ internal sealed class DiscountTestDataGenerator : IEnumerable<object[]>
             {
                 DiscountPercentage = 10 
             },
-            90M
+            90M,
+            100M,
+            "Product A"
         ];
         yield return
         [
@@ -40,7 +42,9 @@ internal sealed class DiscountTestDataGenerator : IEnumerable<object[]>
             {
                 DiscountPercentage = 5 
             },
-            119.65M
+            119.65M,
+            125.95M,
+            "Product C"
         ];        
     }
     
