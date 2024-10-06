@@ -6,17 +6,17 @@ public class ProductPricingRepository : IProductPricingRepository
 {
     private static readonly List<ProductPricingModel> _productPricingModels = SeedProductPricingModels();
 
-    public Task<ProductPricingModel> GetProductPricingByIdAsync(int id)
+    public async Task<ProductPricingModel> GetProductPricingByIdAsync(int id)
     {
-        return Task.FromResult(_productPricingModels.FirstOrDefault(x => x.Id == id));
+        return await Task.FromResult(_productPricingModels.FirstOrDefault(x => x.Id == id));
     }
 
-    public Task<IEnumerable<ProductPricingModel>> GetAllProductsAsync()
+    public async Task<IEnumerable<ProductPricingModel>> GetAllProductsAsync()
     {
-        return Task.FromResult(_productPricingModels.AsEnumerable());
+        return await Task.FromResult(_productPricingModels.AsEnumerable());
     }
 
-    public Task<ProductPricingModel> UpdateProductPriceAsync(int productId, PriceModel priceModel)
+    public async Task<ProductPricingModel> UpdateProductPriceAsync(int productId, PriceModel priceModel)
     {
         var productPriceModel = _productPricingModels.FirstOrDefault(x => x.Id == productId);
         if (productPriceModel is null)
@@ -28,7 +28,7 @@ public class ProductPricingRepository : IProductPricingRepository
 
         UpdateProductPriceModel(priceModel, productPriceModel, priceHistory);
 
-        return Task.FromResult(productPriceModel);
+        return await Task.FromResult(productPriceModel);
     }
 
     private static void UpdateProductPriceModel(PriceModel priceModel, ProductPricingModel productPricingModel,

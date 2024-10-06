@@ -8,7 +8,7 @@ using ProductPricing.Application.Services;
 namespace ProductPricing.Api.Controllers;
 
 [ApiController]
-[Route("api")]
+[Route("api/products")]
 public class ProductsController : ControllerBase
 {
     private readonly IProductPricingService _productPricingService;
@@ -18,7 +18,7 @@ public class ProductsController : ControllerBase
         _productPricingService = productPricingService ?? throw new ArgumentNullException(nameof(productPricingService));
     }
 
-    [HttpGet("products")]
+    [HttpGet]
     [ProducesResponseType(typeof(ProductsResponse), StatusCodes.Status200OK)]
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> GetAllProducts()
@@ -27,7 +27,7 @@ public class ProductsController : ControllerBase
         return Ok(response);
     }
     
-    [HttpGet("products/{id:int}")]
+    [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(ProductPricingResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces(MediaTypeNames.Application.Json)]
@@ -43,7 +43,7 @@ public class ProductsController : ControllerBase
         return Ok(response);
     }
 
-    [HttpPost("products/{id:int}/discounts")]
+    [HttpPost("{id:int}/discounts")]
     [ProducesResponseType(typeof(DiscountResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -65,7 +65,7 @@ public class ProductsController : ControllerBase
         return Ok(response);
     }
     
-    [HttpPut("products/{id:int}/prices")]
+    [HttpPut("{id:int}/prices")]
     [ProducesResponseType(typeof(NewPriceResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
