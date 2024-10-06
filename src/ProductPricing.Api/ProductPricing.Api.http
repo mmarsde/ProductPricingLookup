@@ -1,5 +1,5 @@
 @ProductPricing_Api_HostAddress = http://localhost:5000
-@id = 4
+@id = 1
 
 GET {{ProductPricing_Api_HostAddress}}/api/products/{{id}}/
 Accept: application/json

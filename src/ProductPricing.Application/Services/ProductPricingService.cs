@@ -46,38 +46,12 @@ public class ProductPricingService : IProductPricingService
     
     public async Task<NewPriceResponse> UpdatePriceAsync(int id, PriceModel priceModel)
     {
-        var productPricingModel = await _productPricingRepository.GetProductPricingByIdAsync(id);
-
-        if (productPricingModel is null)
-        {
-            return null;
-        }
-
-        var priceHistory = UpdatePriceHistory(productPricingModel);
-        var productPriceModel = UpdateProductPriceModel(priceModel, productPricingModel, priceHistory);
-        await _productPricingRepository.UpdateProductPriceAsync(id, productPriceModel);
+        var productPriceModel = await _productPricingRepository.UpdateProductPriceAsync(id, priceModel);
         
-        return productPriceModel.MapToNewPriceResponse();
-    }
-
-    private static ProductPricingModel UpdateProductPriceModel(PriceModel priceModel, ProductPricingModel productPricingModel,
-        IEnumerable<PriceModel> priceHistory)
-    {
-        productPricingModel.CurrentPrice = priceModel.Price;
-        productPricingModel.LastUpdated = priceModel.CreateDateTime;
-        productPricingModel.PriceHistory = priceHistory;
-        return productPricingModel;
-    }
-
-    private static IEnumerable<PriceModel> UpdatePriceHistory(ProductPricingModel productPricingModel)
-    {
-        var priceHistory = productPricingModel.PriceHistory?.ToList() ?? [];
-        var originalPrice = productPricingModel.CurrentPrice;
-        var lastUpdated = productPricingModel.LastUpdated;
-        priceHistory.Add(new PriceModel{ CreateDateTime = lastUpdated, Price = originalPrice });
-        return priceHistory.OrderByDescending(x => x.CreateDateTime); 
+        return productPriceModel?.MapToNewPriceResponse();
     }
     
+    // Left here due to the simplicity of the calculation, but could be refactored to its own service class. E.g. ICalculationEngine with a Calculate() method.
     private static decimal CalculateDiscountPrice(int discountPercentage, decimal currentPrice)
     {
         var discountValue = discountPercentage / 100m;

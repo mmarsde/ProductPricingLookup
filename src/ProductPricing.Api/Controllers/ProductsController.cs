@@ -66,7 +66,7 @@ public class ProductsController : ControllerBase
     }
     
     [HttpPut("products/{id:int}/prices")]
-    [ProducesResponseType(typeof(NewPriceResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(NewPriceResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces(MediaTypeNames.Application.Json)]    
@@ -85,6 +85,6 @@ public class ProductsController : ControllerBase
             return NotFound();
         }
         
-        return CreatedAtAction(nameof(GetProductById), new { id }, response);
+        return Ok(response);
     }
 }

@@ -20,10 +20,15 @@ internal sealed class NewPriceTestDataGenerator : IEnumerable<object[]>
             {
                 Id = 1,
                 Name = "Product A",
-                CurrentPrice  = 100.0M,
-                LastUpdated = new DateTime(2024, 09, 26, 12, 34, 56),
+                CurrentPrice  = 115.0M,
+                LastUpdated = new DateTime(2024, 10, 05, 14, 56, 24),
                 PriceHistory = new List<PriceModel>
                     {
+                        new()
+                        {
+                            Price = 100.0M,
+                            CreateDateTime = new DateTime(2024, 09, 26, 12, 34, 56),
+                        },                        
                         new()
                         {
                             Price = 120.0M,

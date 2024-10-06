@@ -1,4 +1,3 @@
-using Microsoft.VisualBasic.CompilerServices;
 using ProductPricing.Application.Contracts.Responses;
 using ProductPricing.Application.Models.Domain;
 

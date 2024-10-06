@@ -6,5 +6,5 @@ public interface IProductPricingRepository
 {
     Task<ProductPricingModel> GetProductPricingByIdAsync(int id);
     Task<IEnumerable<ProductPricingModel>> GetAllProductsAsync();
-    Task UpdateProductPriceAsync(int productId, ProductPricingModel productPricingModel);
+    Task<ProductPricingModel> UpdateProductPriceAsync(int productId, PriceModel priceModel);
 }

@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using ProductPricing.Application.Repositories;
 using ProductPricing.Application.Services;
 
@@ -9,8 +8,8 @@ public static class ProductPricingApplicationExtensions
 {
     public static IServiceCollection AddProductPricingApplication(this IServiceCollection services)
     {
-        services.AddSingleton<IProductPricingRepository, ProductPricingRepository>();
-        services.AddSingleton<IProductPricingService, ProductPricingService>();
+        services.AddScoped<IProductPricingRepository, ProductPricingRepository>();
+        services.AddScoped<IProductPricingService, ProductPricingService>();
         return services;
     }
 }

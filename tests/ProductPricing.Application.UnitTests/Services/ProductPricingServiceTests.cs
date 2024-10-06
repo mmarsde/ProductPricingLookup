@@ -115,15 +115,13 @@ public class ProductPricingServiceTests
     public async Task UpdatePriceAsync_ShouldReturnExpectedResult(int productId, PriceModel priceModel, ProductPricingModel repositoryResult, NewPriceResponse expectedResult)
     {
         //arrange
-        _productPricingRepository.GetProductPricingByIdAsync(productId).Returns(repositoryResult);
-        await _productPricingRepository.UpdateProductPriceAsync(Arg.Is(productId), Arg.Any<ProductPricingModel>());
+        _productPricingRepository.UpdateProductPriceAsync(productId, priceModel).Returns(repositoryResult);
         
         //act
         var result = await _productPricingService.UpdatePriceAsync(productId, priceModel);
         
         //assert
-        await _productPricingRepository.Received(1).GetProductPricingByIdAsync(Arg.Is(productId));
-        await _productPricingRepository.Received(1).UpdateProductPriceAsync(Arg.Is(productId), Arg.Any<ProductPricingModel>());
+        await _productPricingRepository.Received(1).UpdateProductPriceAsync(Arg.Is(productId), Arg.Is(priceModel));
         result.Should().BeEquivalentTo(expectedResult);
     }
 
@@ -135,7 +133,7 @@ public class ProductPricingServiceTests
         var result = await _productPricingService.UpdatePriceAsync(productId, priceModel);
         
         //assert
-        await _productPricingRepository.Received(1).GetProductPricingByIdAsync(Arg.Is(productId));
+        await _productPricingRepository.Received(1).UpdateProductPriceAsync(Arg.Is(productId), Arg.Is(priceModel));
         result.Should().BeNull();
     }
 }
